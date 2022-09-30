@@ -22,4 +22,4 @@
       nodo2.vm.box = "generic/ubuntu2010"
       nodo2.vm.hostname = "nodo2"
     end
-
+ end
