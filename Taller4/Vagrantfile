@@ -1,14 +1,34 @@
+
 Vagrant.configure("2") do |config|
 
     config.vm.define :nodo1 do |nodo1|
       nodo1.vm.box = "debian/bullseye64"
       nodo1.vm.hostname = "nodo1"
       nodo1.vm.synced_folder ".", "/vagrant", disabled: true
-    end
+    nodo1.vm.network :private_network,
+      :type => "dhcp",
+      :libvirt__network_address => '192.168.200.0'
+    nodo1.vm.network :private_network,
+      :libvirt__dhcp_enabled => false,
+      :ip => "10.0.0.1"
+    end    
     config.vm.define :nodo2 do |nodo2|
       nodo2.vm.box = "generic/ubuntu2010"
       nodo2.vm.hostname = "nodo2"
       nodo2.vm.synced_folder ".", "/vagrant", disabled: true
+    nodo2.vm.network :private_network,
+      :libvirt__dhcp_enabled => false,
+      :ip => "10.0.0.2"
+    nodo2.vm.network :public_network,
+      :dev => "virbr0",
+      :mode => "bridge",
+      :type => "bridge"
+    nodo2.vm.provider :libvirt do |libvirt|
+      libvirt.storage :file, :size => '1G'
+    end
+    nodo2.vm.provider :libvirt do |libvirt|
+      libvirt.storage :file, :size => '1G'
+    end
     config.vm.provider :libvirt do |libvirt|
       libvirt.management_network_name = "default"
       libvirt.management_network_address = '192.168.122.0/24'
